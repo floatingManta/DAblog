@@ -1,3 +1,11 @@
+---
+toc: true
+layout: post
+description: 가상환경 설정에 대한 포스트.
+categories: [markdown]
+title: Python 오프라인에서 가상환경 설정하기
+---
+
 # Python 가상환경 설정
 조건:  
 - 인터넷 연결이 없는 오프라인
