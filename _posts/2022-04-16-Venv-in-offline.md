@@ -63,17 +63,22 @@ py -3 -m venv (가상환경 이름)
 - 어떻게 빠르게 각종 필요한 패키지를 설치할 수 있을까?
 - 파이썬 버전에 따라 패키지 설치 파일이 다른데 어떻게 내 외부망에서 일치시킬 수 있을까?: 이 문제는 위의 1,2 단계에서 내외부에 전부 같은 단계를 실행하여 방지한다.  
 이 과정을 무시하여 발생할 수 있는 문제는 다음 페이지 참고:  
-https://cryptosalamander.tistory.com/148 판다스 에러난 경우
+https://cryptosalamander.tistory.com/148 판다스 에러난 경우  
+- 패키지 중 MicroSoft C++ 14.0이 먼저 필요한 경우 어떻게 설치해야 할까?
 
-1. 기존 가상환경을 activate한 터미널에서 다음 명령을 실행하여 requirments.txt를 만든다.
+1. 기존 가상환경을 activate한 터미널에서 다음 명령을 실행하여 requirments.txt를 만든다.  
 `pip freeze > requirements.txt`
-2. 외부망으로 requirements.txt를 옮기고 최신 Python 버전 가상환경 터미널에서 다음 명령을 실행하여 패키지를 다운로드 받는다.
+2. 외부망으로 requirements.txt를 옮기고 최신 Python 버전 가상환경 터미널에서 다음 명령을 실행하여 패키지를 다운로드 받는다.  
 `pip download $PATH -r .\requirements.txt`  
-requirements파일의 위치를 지정해 줄 수도 있고, 파일을 가상환경이 활성화된 위치로 이동하여 바로 명령이 실행되게 할 수도 있다.
-웬만하면 다운로드 위치를 지정해서 폴더 통째로 압축이 편하도록 해 준다.
+requirements파일의 위치를 지정해 줄 수도 있고, 파일을 가상환경이 활성화된 위치로 이동하여 바로 명령이 실행되게 할 수도 있다.  
+웬만하면 다운로드 위치를 지정해서 폴더 통째로 압축이 편하도록 해 준다.  
 3. 다운받은 패키지를 압축해서 내부망으로 옮긴다.
-4. VSCode 터미널에서 다음 명령어를 실행하여 패키지를 설치한다.
+4. VSCode 터미널에서 다음 명령어를 실행하여 패키지를 설치한다.  
 `pip install --no-index --find-links="./" -r .\requirements.txt`
+5. MicroSoft C++ 14.0 이상을 요구하는 경우, Bulid Tool을 설치한다.  
+Visual Studio 다운로드 페이지에서 Visual Studio용 도구 부분을 클릭한다.  
+늘어난 목록 중 Visual Studio 2022용 빌드 도구를 다운로드 받는다.  
+실행파일을 실행하면 Visual Studio Installer가 실행된다.  
 
 ### 4. Jupyter Notebook 커널을 설정한다.
 고민사항:
@@ -81,7 +86,7 @@ requirements파일의 위치를 지정해 줄 수도 있고, 파일을 가상환
 
 1. 최소 ipykernel 또는 jupyter 패키지가 설치되어야 한다.
 2. 터미널에서 가상환경을 활성화한다.
-3. 다음 명령을 실행하여 커널을 추가한다.
+3. 다음 명령을 실행하여 커널을 추가한다.  
 `ipython kernel install --user --name=.venv --display-name (선택 창에서 보일 이름)`
 4. VSCode를 끄고 다시 켠다.
 
