@@ -110,3 +110,5 @@ https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=c_ist82&logN
 패키지 설치 안내
 https://srinivas1996kumar.medium.com/adding-custom-kernels-to-a-jupyter-notebook-in-visual-studio-53e4d595208c
 Jupyter Notebook에 커널 연결하기
+https://pivox.tistory.com/35
+C++ Build Tool 설치
