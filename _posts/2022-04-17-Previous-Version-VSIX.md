@@ -1,8 +1,7 @@
 ---
 toc: true
 layout: post
-description: VSCode의 VSIX파일을 다운로드 받아야 하는데, 이전 버전을 다운로드 받기
-Download VSC Extension Previous version VXIS file
+description: VSCode의 VSIX파일을 다운로드 받아야 하는데, 이전 버전을 다운로드 받기 Download VSC Extension Previous version VXIS file
 categories: [markdown]
 title: VSCode 확장 이전 버전 VSIX 파일 다운로드 받기 
 ---
