@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>VSCode 확장 이전 버전 VSIX 파일 다운로드 받기 | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="VSCode 확장 이전 버전 VSIX 파일 다운로드 받기" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="VSCode의 VSIX파일을 다운로드 받아야 하는데, 이전 버전을 다운로드 받기 Download VSC Extension Previous version VXIS file" />
+<meta property="og:description" content="VSCode의 VSIX파일을 다운로드 받아야 하는데, 이전 버전을 다운로드 받기 Download VSC Extension Previous version VXIS file" />
+<link rel="canonical" href="https://floatingmanta.github.io/DAblog/markdown/2022/04/17/Previous-Version-VSIX.html" />
+<meta property="og:url" content="https://floatingmanta.github.io/DAblog/markdown/2022/04/17/Previous-Version-VSIX.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-04-17T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="VSCode 확장 이전 버전 VSIX 파일 다운로드 받기" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-17T00:00:00-05:00","datePublished":"2022-04-17T00:00:00-05:00","description":"VSCode의 VSIX파일을 다운로드 받아야 하는데, 이전 버전을 다운로드 받기 Download VSC Extension Previous version VXIS file","headline":"VSCode 확장 이전 버전 VSIX 파일 다운로드 받기","mainEntityOfPage":{"@type":"WebPage","@id":"https://floatingmanta.github.io/DAblog/markdown/2022/04/17/Previous-Version-VSIX.html"},"url":"https://floatingmanta.github.io/DAblog/markdown/2022/04/17/Previous-Version-VSIX.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/DAblog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://floatingmanta.github.io/DAblog/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/DAblog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/DAblog/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/DAblog/about/">About Me</a><a class="page-link" href="/DAblog/search/">Search</a><a class="page-link" href="/DAblog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">VSCode 확장 이전 버전 VSIX 파일 다운로드 받기</h1><p class="page-description">VSCode의 VSIX파일을 다운로드 받아야 하는데, 이전 버전을 다운로드 받기 Download VSC Extension Previous version VXIS file</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-17T00:00:00-05:00" itemprop="datePublished">
+        Apr 17, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/DAblog/categories/#markdown">markdown</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h1"><a href="#visual-studio-code-extension의-이전-버전-vsix파일-다운로드">Visual Studio Code Extension의 이전 버전 VSIX파일 다운로드</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#목적">목적</a></li>
+<li class="toc-entry toc-h2"><a href="#해결">해결</a></li>
+<li class="toc-entry toc-h2"><a href="#상세-상황">상세 상황</a></li>
+</ul>
+</li>
+</ul><h1 id="visual-studio-code-extension의-이전-버전-vsix파일-다운로드">
+<a class="anchor" href="#visual-studio-code-extension%EC%9D%98-%EC%9D%B4%EC%A0%84-%EB%B2%84%EC%A0%84-vsix%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C" aria-hidden="true"><span class="octicon octicon-link"></span></a>Visual Studio Code Extension의 이전 버전 VSIX파일 다운로드</h1>
+
+<h2 id="목적">
+<a class="anchor" href="#%EB%AA%A9%EC%A0%81" aria-hidden="true"><span class="octicon octicon-link"></span></a>목적</h2>
+
+<p>VSCode의 확장을 오프라인으로 설치하려면, 스토어에서 VSIX파일을 다운받아야 한다.<br>
+이전 버전을 설치하려면, VSCode에서 확장을 오른클릭하여 나오는 다른 버전 설치하기를 누른다.</p>
+
+<p>그런데 이전 버전을 오프라인 설치하려면?<br>
+스토어의 다운로드 기능은 항상 최신 버전 VSIX만 제공한다.</p>
+
+<h2 id="해결">
+<a class="anchor" href="#%ED%95%B4%EA%B2%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>해결</h2>
+
+<p>https://stackoverflow.com/questions/69398500/vscode-download-older-version-of-an-extension 
+관련 stackoverflow 글</p>
+
+<p>https://www.vsixhub.com/<br>
+vsix 이전 버전 보관 사이트</p>
+
+<h2 id="상세-상황">
+<a class="anchor" href="#%EC%83%81%EC%84%B8-%EC%83%81%ED%99%A9" aria-hidden="true"><span class="octicon octicon-link"></span></a>상세 상황</h2>
+<p>Offline환경에서 VSCode의 IntelliSense가 작동하지 않는다.<br>
+Setting.json을 수정하여 언어를 pylance로 바꾸고 ExtraPaths는 이미 추가해 본 상황<br>
+최후의 수단으로 Jupyter 확장을 업데이트 시도<br>
+그런데 다운받은 VSIX가 VSCode 1.66.1과 호환되지 않는다는 에러 발생<br>
+그럼 설치 가능한 이전 버전을 찾아야하기 때문에 본 문서의 해결책 탐색</p>
+
+  </div><a class="u-url" href="/DAblog/markdown/2022/04/17/Previous-Version-VSIX.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/DAblog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/DAblog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/DAblog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" target="_blank" title="fastai"><svg class="svg-icon grey"><use xlink:href="/DAblog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" target="_blank" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/DAblog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
