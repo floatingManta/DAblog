@@ -1,9 +1,9 @@
 ---
 toc: true
 layout: post
-description: 가상환경 설정에 대한 포스트.
+description: 가상환경 설정에 대한 포스트(Conda/콘다 없이!)
 categories: [markdown]
-title: Python 오프라인에서 가상환경 설정하기
+title: "[Python]오프라인에서 가상환경 설정하기"
 ---
 
 # Python 가상환경 설정
