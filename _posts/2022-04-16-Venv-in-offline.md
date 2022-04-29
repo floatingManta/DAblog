@@ -90,12 +90,26 @@ Visual Studio 다운로드 페이지에서 Visual Studio용 도구 부분을 클
 `ipython kernel install --user --name=.venv --display-name (선택 창에서 보일 이름)`
 4. VSCode를 끄고 다시 켠다.
 
-# 추가 고민 사항
-Microsoft C++ Build Tools 내부망에 설치(pyobdc 패키지 설치를 위해)  
-https://velog.io/@flasharrow/pip-install-%EC%97%90%EB%9F%AC-Microsoft-Visual-C-14.0-is-required.-%ED%95%B4%EA%B2%B0  
-분할 압축 시도 https://kr.bandisoft.com/bandizip/help/how-to-split-a-large-file-into-smaller-files-with-bandizip/  
-용량 제한으로 인해 실패  
+### +)추가사항: Microsoft C++ Build Tools 설치
+고민사항: 패키지 중에서는 Microsoft Visual C++ 14.0 이상을 요구하는 경우가 있다. 설치를 시도하면 다음 에러를 출력한다.
+> error: Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": https://visualstudio.microsoft.com/downloads/
 
+최근 Microsoft의 Build Tools설치 방법은 Installer를 설치하고 인터넷에서 다운로드 받아 설치하는 것을 기본으로 한다.  
+즉 폐쇄망에서 설치하려면 다른 방법이 필요하다.  
+
+네트워크 환경에서 모든 Build Tools를 다운로드 받은 다음 폐쇄망으로 옮긴다.
+
+1. MicroSoft 다운로드 웹페이지에서 빌드 도구(Build Tool)을 다운로드 받는다.
+2. 빌드도구를 다운로드 받은 위치에서 명령창을 실행한다.: 다운로드 위치 파일 탐색기에서 주소창에 'cmd'입력
+3. 다음 명령어를 실행한다.: --add 옵션으로 어떤 build tool을 설치할지 지정할 수 있다. 만약 전체를 설치하려고 하면 엄청난 시간이 소요된다.  
+`.\vs_buildtools__xxx.xxx.exe --layout (다운로드 받으려는 위치) --add Microsoft.VisualStudio.Component.VC.140 -includeOptional --add Microsoft.VisualStudio.Component.Windows10SDK.16299 --lang ko-KR`
+이 명령어로도 2시간 가량은 다운로드에 소요된다.  
+4. 위 명령어에 예를 들어 c:\vslayout라고 입력했다면 vslayout폴더에 모든 내용이 다운로드 된다. 이 내용을 폐쇄망으로 옮긴다.(이 예시로는 대략 20GB정도 필요)
+5. 폴더 내부에 vs_buildtools__xxx.xx.exe 실행파일을 실행한다.
+6. Installer가 실행되고, 설치 가능한 항목이 자동으로 지정되어 있다. 그대로 설치한다.
+7. 설치 완료하면 다시 Python 패키지를 설치한다.
+
+# 추가 고민 사항
 https://levelup.gitconnected.com/install-multiple-python-versions-on-windows-10-15a8685ec99d  
 주피터노트북 가상환경?
 
@@ -112,3 +126,5 @@ https://srinivas1996kumar.medium.com/adding-custom-kernels-to-a-jupyter-notebook
 Jupyter Notebook에 커널 연결하기
 https://pivox.tistory.com/35
 C++ Build Tool 설치
+https://velog.io/@flasharrow/pip-install-%EC%97%90%EB%9F%AC-Microsoft-Visual-C-14.0-is-required.-%ED%95%B4%EA%B2%B0  
+Microsoft C++ Build Tools 내부망에 설치(pyobdc 패키지 설치를 위해)  
