@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>로그파일 분석하기 | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="로그파일 분석하기" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An easy to use blogging platform with support for Jupyter Notebooks." />
+<meta property="og:description" content="An easy to use blogging platform with support for Jupyter Notebooks." />
+<link rel="canonical" href="https://floatingmanta.github.io/DAblog/2022/05/15/read-log-file.html" />
+<meta property="og:url" content="https://floatingmanta.github.io/DAblog/2022/05/15/read-log-file.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-05-15T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="로그파일 분석하기" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-05-15T00:00:00-05:00","datePublished":"2022-05-15T00:00:00-05:00","description":"An easy to use blogging platform with support for Jupyter Notebooks.","headline":"로그파일 분석하기","mainEntityOfPage":{"@type":"WebPage","@id":"https://floatingmanta.github.io/DAblog/2022/05/15/read-log-file.html"},"url":"https://floatingmanta.github.io/DAblog/2022/05/15/read-log-file.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/DAblog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://floatingmanta.github.io/DAblog/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/DAblog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/DAblog/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/DAblog/about/">About Me</a><a class="page-link" href="/DAblog/search/">Search</a><a class="page-link" href="/DAblog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">로그파일 분석하기</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-05-15T00:00:00-05:00" itemprop="datePublished">
+        May 15, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/floatingManta/DAblog/tree/master/_notebooks/2022-05-15-read log file.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/DAblog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/floatingManta/DAblog/master?filepath=_notebooks%2F2022-05-15-read+log+file.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/DAblog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/floatingManta/DAblog/blob/master/_notebooks/2022-05-15-read log file.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/DAblog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2FfloatingManta%2FDAblog%2Fblob%2Fmaster%2F_notebooks%2F2022-05-15-read+log+file.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/DAblog/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-05-15-read log file.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="err">!</span><span class="n">pip3</span> <span class="n">install</span> <span class="n">pandas_profiling</span> <span class="o">--</span><span class="n">upgrade</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Requirement already satisfied: pandas_profiling in /usr/local/lib/python3.7/dist-packages (1.4.1)
+Collecting pandas_profiling
+  Downloading pandas_profiling-3.2.0-py2.py3-none-any.whl (262 kB)
+     |████████████████████████████████| 262 kB 5.2 MB/s 
+Requirement already satisfied: matplotlib&gt;=3.2.0 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (3.2.2)
+Collecting pydantic&gt;=1.8.1
+  Downloading pydantic-1.9.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.9 MB)
+     |████████████████████████████████| 10.9 MB 48.5 MB/s 
+Requirement already satisfied: missingno&gt;=0.4.2 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (0.5.1)
+Requirement already satisfied: pandas!=1.0.0,!=1.0.1,!=1.0.2,!=1.1.0,&gt;=0.25.3 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (1.3.5)
+Collecting tangled-up-in-unicode==0.2.0
+  Downloading tangled_up_in_unicode-0.2.0-py3-none-any.whl (4.7 MB)
+     |████████████████████████████████| 4.7 MB 25.9 MB/s 
+Requirement already satisfied: tqdm&gt;=4.48.2 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (4.64.0)
+Collecting phik&gt;=0.11.1
+  Downloading phik-0.12.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (690 kB)
+     |████████████████████████████████| 690 kB 53.5 MB/s 
+Requirement already satisfied: scipy&gt;=1.4.1 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (1.4.1)
+Requirement already satisfied: joblib~=1.1.0 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (1.1.0)
+Collecting PyYAML&gt;=5.0.0
+  Downloading PyYAML-6.0-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (596 kB)
+     |████████████████████████████████| 596 kB 55.9 MB/s 
+Collecting requests&gt;=2.24.0
+  Downloading requests-2.27.1-py2.py3-none-any.whl (63 kB)
+     |████████████████████████████████| 63 kB 1.7 MB/s 
+Requirement already satisfied: seaborn&gt;=0.10.1 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (0.11.2)
+Collecting multimethod&gt;=1.4
+  Downloading multimethod-1.8-py3-none-any.whl (9.8 kB)
+Collecting visions[type_image_path]==0.7.4
+  Downloading visions-0.7.4-py3-none-any.whl (102 kB)
+     |████████████████████████████████| 102 kB 11.9 MB/s 
+Collecting htmlmin&gt;=0.1.12
+  Downloading htmlmin-0.1.12.tar.gz (19 kB)
+Requirement already satisfied: jinja2&gt;=2.11.1 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (2.11.3)
+Collecting markupsafe~=2.1.1
+  Downloading MarkupSafe-2.1.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (25 kB)
+Requirement already satisfied: numpy&gt;=1.16.0 in /usr/local/lib/python3.7/dist-packages (from pandas_profiling) (1.21.6)
+Requirement already satisfied: attrs&gt;=19.3.0 in /usr/local/lib/python3.7/dist-packages (from visions[type_image_path]==0.7.4-&gt;pandas_profiling) (21.4.0)
+Requirement already satisfied: networkx&gt;=2.4 in /usr/local/lib/python3.7/dist-packages (from visions[type_image_path]==0.7.4-&gt;pandas_profiling) (2.6.3)
+Requirement already satisfied: Pillow in /usr/local/lib/python3.7/dist-packages (from visions[type_image_path]==0.7.4-&gt;pandas_profiling) (7.1.2)
+Collecting imagehash
+  Downloading ImageHash-4.2.1.tar.gz (812 kB)
+     |████████████████████████████████| 812 kB 50.8 MB/s 
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.7/dist-packages (from matplotlib&gt;=3.2.0-&gt;pandas_profiling) (0.11.0)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,&gt;=2.0.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib&gt;=3.2.0-&gt;pandas_profiling) (3.0.8)
+Requirement already satisfied: python-dateutil&gt;=2.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib&gt;=3.2.0-&gt;pandas_profiling) (2.8.2)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib&gt;=3.2.0-&gt;pandas_profiling) (1.4.2)
+Requirement already satisfied: typing-extensions in /usr/local/lib/python3.7/dist-packages (from kiwisolver&gt;=1.0.1-&gt;matplotlib&gt;=3.2.0-&gt;pandas_profiling) (4.2.0)
+Requirement already satisfied: pytz&gt;=2017.3 in /usr/local/lib/python3.7/dist-packages (from pandas!=1.0.0,!=1.0.1,!=1.0.2,!=1.1.0,&gt;=0.25.3-&gt;pandas_profiling) (2022.1)
+Collecting scipy&gt;=1.4.1
+  Downloading scipy-1.7.3-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (38.1 MB)
+     |████████████████████████████████| 38.1 MB 1.1 MB/s 
+Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.7/dist-packages (from python-dateutil&gt;=2.1-&gt;matplotlib&gt;=3.2.0-&gt;pandas_profiling) (1.15.0)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.24.0-&gt;pandas_profiling) (2021.10.8)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.24.0-&gt;pandas_profiling) (2.10)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.24.0-&gt;pandas_profiling) (1.24.3)
+Requirement already satisfied: charset-normalizer~=2.0.0 in /usr/local/lib/python3.7/dist-packages (from requests&gt;=2.24.0-&gt;pandas_profiling) (2.0.12)
+Requirement already satisfied: PyWavelets in /usr/local/lib/python3.7/dist-packages (from imagehash-&gt;visions[type_image_path]==0.7.4-&gt;pandas_profiling) (1.3.0)
+Building wheels for collected packages: htmlmin, imagehash
+  Building wheel for htmlmin (setup.py) ... done
+  Created wheel for htmlmin: filename=htmlmin-0.1.12-py3-none-any.whl size=27098 sha256=5a1c0b2d5766cc3939d187379ab89e9fdca08e5f1f0f1896bf84b1bb4caa5d29
+  Stored in directory: /root/.cache/pip/wheels/70/e1/52/5b14d250ba868768823940c3229e9950d201a26d0bd3ee8655
+  Building wheel for imagehash (setup.py) ... done
+  Created wheel for imagehash: filename=ImageHash-4.2.1-py2.py3-none-any.whl size=295206 sha256=9c69ba0d5c5d76d7add774dd24d0fc7167d493995d6b79e407ddc9c71cc1742e
+  Stored in directory: /root/.cache/pip/wheels/4c/d5/59/5e3e297533ddb09407769762985d134135064c6831e29a914e
+Successfully built htmlmin imagehash
+Installing collected packages: tangled-up-in-unicode, scipy, multimethod, visions, markupsafe, imagehash, requests, PyYAML, pydantic, phik, htmlmin, pandas-profiling
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.4.1
+    Uninstalling scipy-1.4.1:
+      Successfully uninstalled scipy-1.4.1
+  Attempting uninstall: markupsafe
+    Found existing installation: MarkupSafe 2.0.1
+    Uninstalling MarkupSafe-2.0.1:
+      Successfully uninstalled MarkupSafe-2.0.1
+  Attempting uninstall: requests
+    Found existing installation: requests 2.23.0
+    Uninstalling requests-2.23.0:
+      Successfully uninstalled requests-2.23.0
+  Attempting uninstall: PyYAML
+    Found existing installation: PyYAML 3.13
+    Uninstalling PyYAML-3.13:
+      Successfully uninstalled PyYAML-3.13
+  Attempting uninstall: pandas-profiling
+    Found existing installation: pandas-profiling 1.4.1
+    Uninstalling pandas-profiling-1.4.1:
+      Successfully uninstalled pandas-profiling-1.4.1
+<span class="ansi-red-fg">ERROR: pip&#39;s dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+google-colab 1.0.0 requires requests~=2.23.0, but you have requests 2.27.1 which is incompatible.
+datascience 0.10.6 requires folium==0.2.1, but you have folium 0.8.3 which is incompatible.
+albumentations 0.1.12 requires imgaug&lt;0.2.7,&gt;=0.2.5, but you have imgaug 0.2.9 which is incompatible.</span>
+Successfully installed PyYAML-6.0 htmlmin-0.1.12 imagehash-4.2.1 markupsafe-2.1.1 multimethod-1.8 pandas-profiling-3.2.0 phik-0.12.2 pydantic-1.9.0 requests-2.27.1 scipy-1.7.3 tangled-up-in-unicode-0.2.0 visions-0.7.4
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">MarkupSafe</span><span class="o">==</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Collecting MarkupSafe==2.0.1
+  Downloading MarkupSafe-2.0.1-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (31 kB)
+Installing collected packages: MarkupSafe
+  Attempting uninstall: MarkupSafe
+    Found existing installation: MarkupSafe 2.1.1
+    Uninstalling MarkupSafe-2.1.1:
+      Successfully uninstalled MarkupSafe-2.1.1
+<span class="ansi-red-fg">ERROR: pip&#39;s dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+pandas-profiling 3.2.0 requires markupsafe~=2.1.1, but you have markupsafe 2.0.1 which is incompatible.
+datascience 0.10.6 requires folium==0.2.1, but you have folium 0.8.3 which is incompatible.</span>
+Successfully installed MarkupSafe-2.0.1
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">pandas_profiling</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">log_date_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;filesdataframe.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;files.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+  <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">lines</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span> <span class="c1"># 보안상 출력 삭제</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">log_date_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">:]],</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">log_date_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;filesdataframe.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pr</span> <span class="o">=</span> <span class="n">log_date_df</span><span class="o">.</span><span class="n">profile_report</span><span class="p">()</span>
+<span class="n">pr</span> <span class="c1"># 보안상 출력 삭제</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Appendix">Appendix<a class="anchor-link" href="#Appendix"> </a></h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">:]):</span>
+    <span class="c1"># print(line.split(&#39;\t&#39;))</span>
+    <span class="c1"># print(len(line.split(&#39;\t&#39;)))</span>
+    <span class="c1"># users_log_raw = pd.concat([users_log_raw, pd.Series(line.split(&#39; &#39;))], axis=1)</span>
+    <span class="c1"># users_log_raw = users_log_raw.append(pd.DataFrame([line.split(&#39; &#39;)]))</span>
+    <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-32-6555b2ec1e83&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span>     <span class="ansi-red-fg"># print(len(line.split(&#39;\t&#39;)))</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     <span class="ansi-red-fg"># users_log_raw = pd.concat([users_log_raw, pd.Series(line.split(&#39; &#39;))], axis=1)</span>
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg">     </span>users_log_raw <span class="ansi-blue-fg">=</span> users_log_raw<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>pd<span class="ansi-blue-fg">.</span>DataFrame<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>line<span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39; &#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/frame.py</span> in <span class="ansi-cyan-fg">append</span><span class="ansi-blue-fg">(self, other, ignore_index, verify_integrity, sort)</span>
+<span class="ansi-green-intense-fg ansi-bold">   8967</span>                 ignore_index<span class="ansi-blue-fg">=</span>ignore_index<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">   8968</span>                 verify_integrity<span class="ansi-blue-fg">=</span>verify_integrity<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">-&gt; 8969</span><span class="ansi-red-fg">                 </span>sort<span class="ansi-blue-fg">=</span>sort<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">   8970</span>             )
+<span class="ansi-green-intense-fg ansi-bold">   8971</span>         ).__finalize__(self, method=&#34;append&#34;)
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/util/_decorators.py</span> in <span class="ansi-cyan-fg">wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    309</span>                     stacklevel<span class="ansi-blue-fg">=</span>stacklevel<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    310</span>                 )
+<span class="ansi-green-fg">--&gt; 311</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> func<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    312</span> 
+<span class="ansi-green-intense-fg ansi-bold">    313</span>         <span class="ansi-green-fg">return</span> wrapper
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/reshape/concat.py</span> in <span class="ansi-cyan-fg">concat</span><span class="ansi-blue-fg">(objs, axis, join, ignore_index, keys, levels, names, verify_integrity, sort, copy)</span>
+<span class="ansi-green-intense-fg ansi-bold">    305</span>     )
+<span class="ansi-green-intense-fg ansi-bold">    306</span> 
+<span class="ansi-green-fg">--&gt; 307</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">return</span> op<span class="ansi-blue-fg">.</span>get_result<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    308</span> 
+<span class="ansi-green-intense-fg ansi-bold">    309</span> 
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/reshape/concat.py</span> in <span class="ansi-cyan-fg">get_result</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    531</span> 
+<span class="ansi-green-intense-fg ansi-bold">    532</span>             new_data = concatenate_managers(
+<span class="ansi-green-fg">--&gt; 533</span><span class="ansi-red-fg">                 </span>mgrs_indexers<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>new_axes<span class="ansi-blue-fg">,</span> concat_axis<span class="ansi-blue-fg">=</span>self<span class="ansi-blue-fg">.</span>bm_axis<span class="ansi-blue-fg">,</span> copy<span class="ansi-blue-fg">=</span>self<span class="ansi-blue-fg">.</span>copy
+<span class="ansi-green-intense-fg ansi-bold">    534</span>             )
+<span class="ansi-green-intense-fg ansi-bold">    535</span>             <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> self<span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/internals/concat.py</span> in <span class="ansi-cyan-fg">concatenate_managers</span><span class="ansi-blue-fg">(mgrs_indexers, axes, concat_axis, copy)</span>
+<span class="ansi-green-intense-fg ansi-bold">    224</span>             fastpath <span class="ansi-blue-fg">=</span> blk<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">.</span>dtype <span class="ansi-blue-fg">==</span> values<span class="ansi-blue-fg">.</span>dtype
+<span class="ansi-green-intense-fg ansi-bold">    225</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 226</span><span class="ansi-red-fg">             </span>values <span class="ansi-blue-fg">=</span> _concatenate_join_units<span class="ansi-blue-fg">(</span>join_units<span class="ansi-blue-fg">,</span> concat_axis<span class="ansi-blue-fg">,</span> copy<span class="ansi-blue-fg">=</span>copy<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    227</span>             fastpath <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span>
+<span class="ansi-green-intense-fg ansi-bold">    228</span> 
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/internals/concat.py</span> in <span class="ansi-cyan-fg">_concatenate_join_units</span><span class="ansi-blue-fg">(join_units, concat_axis, copy)</span>
+<span class="ansi-green-intense-fg ansi-bold">    490</span>     to_concat = [
+<span class="ansi-green-intense-fg ansi-bold">    491</span>         ju<span class="ansi-blue-fg">.</span>get_reindexed_values<span class="ansi-blue-fg">(</span>empty_dtype<span class="ansi-blue-fg">=</span>empty_dtype<span class="ansi-blue-fg">,</span> upcasted_na<span class="ansi-blue-fg">=</span>upcasted_na<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 492</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">for</span> ju <span class="ansi-green-fg">in</span> join_units
+<span class="ansi-green-intense-fg ansi-bold">    493</span>     ]
+<span class="ansi-green-intense-fg ansi-bold">    494</span> 
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/internals/concat.py</span> in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">    490</span>     to_concat = [
+<span class="ansi-green-intense-fg ansi-bold">    491</span>         ju<span class="ansi-blue-fg">.</span>get_reindexed_values<span class="ansi-blue-fg">(</span>empty_dtype<span class="ansi-blue-fg">=</span>empty_dtype<span class="ansi-blue-fg">,</span> upcasted_na<span class="ansi-blue-fg">=</span>upcasted_na<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 492</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">for</span> ju <span class="ansi-green-fg">in</span> join_units
+<span class="ansi-green-intense-fg ansi-bold">    493</span>     ]
+<span class="ansi-green-intense-fg ansi-bold">    494</span> 
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/internals/concat.py</span> in <span class="ansi-cyan-fg">get_reindexed_values</span><span class="ansi-blue-fg">(self, empty_dtype, upcasted_na)</span>
+<span class="ansi-green-intense-fg ansi-bold">    409</span>             fill_value <span class="ansi-blue-fg">=</span> upcasted_na
+<span class="ansi-green-intense-fg ansi-bold">    410</span> 
+<span class="ansi-green-fg">--&gt; 411</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>is_valid_na_for<span class="ansi-blue-fg">(</span>empty_dtype<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    412</span>                 blk_dtype <span class="ansi-blue-fg">=</span> getattr<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>block<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dtype&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    413</span> 
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/internals/concat.py</span> in <span class="ansi-cyan-fg">is_valid_na_for</span><span class="ansi-blue-fg">(self, dtype)</span>
+<span class="ansi-green-intense-fg ansi-bold">    368</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>dtype <span class="ansi-blue-fg">==</span> object<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    369</span>             values <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>block<span class="ansi-blue-fg">.</span>values
+<span class="ansi-green-fg">--&gt; 370</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> all<span class="ansi-blue-fg">(</span>is_valid_na_for_dtype<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> x <span class="ansi-green-fg">in</span> values<span class="ansi-blue-fg">.</span>ravel<span class="ansi-blue-fg">(</span>order<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;K&#34;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    371</span> 
+<span class="ansi-green-intense-fg ansi-bold">    372</span>         if self.dtype.kind == dtype.kind == &#34;M&#34; and not is_dtype_equal(
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/internals/concat.py</span> in <span class="ansi-cyan-fg">&lt;genexpr&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">    368</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>dtype <span class="ansi-blue-fg">==</span> object<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    369</span>             values <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>block<span class="ansi-blue-fg">.</span>values
+<span class="ansi-green-fg">--&gt; 370</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> all<span class="ansi-blue-fg">(</span>is_valid_na_for_dtype<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> x <span class="ansi-green-fg">in</span> values<span class="ansi-blue-fg">.</span>ravel<span class="ansi-blue-fg">(</span>order<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;K&#34;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    371</span> 
+<span class="ansi-green-intense-fg ansi-bold">    372</span>         if self.dtype.kind == dtype.kind == &#34;M&#34; and not is_dtype_equal(
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/core/dtypes/missing.py</span> in <span class="ansi-cyan-fg">is_valid_na_for_dtype</span><span class="ansi-blue-fg">(obj, dtype)</span>
+<span class="ansi-green-intense-fg ansi-bold">    627</span>     <span class="ansi-green-fg">elif</span> dtype<span class="ansi-blue-fg">.</span>kind <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#34;m&#34;</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    628</span>         <span class="ansi-green-fg">return</span> <span class="ansi-green-fg">not</span> isinstance<span class="ansi-blue-fg">(</span>obj<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>np<span class="ansi-blue-fg">.</span>datetime64<span class="ansi-blue-fg">,</span> Decimal<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 629</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">elif</span> dtype<span class="ansi-blue-fg">.</span>kind <span class="ansi-green-fg">in</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;i&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;u&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;f&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;c&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    630</span>         <span class="ansi-red-fg"># Numeric</span>
+<span class="ansi-green-intense-fg ansi-bold">    631</span>         <span class="ansi-green-fg">return</span> obj <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> NaT <span class="ansi-green-fg">and</span> <span class="ansi-green-fg">not</span> isinstance<span class="ansi-blue-fg">(</span>obj<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>np<span class="ansi-blue-fg">.</span>datetime64<span class="ansi-blue-fg">,</span> np<span class="ansi-blue-fg">.</span>timedelta64<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pr</span> <span class="o">=</span> <span class="n">pandas_profiling</span><span class="o">.</span><span class="n">ProfileReport</span><span class="p">(</span><span class="n">log_date_df</span><span class="p">)</span>
+<span class="n">pr</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-52-2b9be7b84bf2&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>pr <span class="ansi-blue-fg">=</span> pandas_profiling<span class="ansi-blue-fg">.</span>ProfileReport<span class="ansi-blue-fg">(</span>log210817<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> pr
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas_profiling/__init__.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, df, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     64</span>         sample <span class="ansi-blue-fg">=</span> kwargs<span class="ansi-blue-fg">.</span>get<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;sample&#39;</span><span class="ansi-blue-fg">,</span> df<span class="ansi-blue-fg">.</span>head<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     65</span> 
+<span class="ansi-green-fg">---&gt; 66</span><span class="ansi-red-fg">         </span>description_set <span class="ansi-blue-fg">=</span> describe<span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     67</span> 
+<span class="ansi-green-intense-fg ansi-bold">     68</span>         self.html = to_html(sample,
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas_profiling/describe.py</span> in <span class="ansi-cyan-fg">describe</span><span class="ansi-blue-fg">(df, bins, check_correlation, correlation_threshold, correlation_overrides, check_recoded, pool_size, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    390</span>             <span class="ansi-green-fg">if</span> name <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">in</span> names<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    391</span>                 names<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>name<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 392</span><span class="ansi-red-fg">     </span>variable_stats <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span>ldesc<span class="ansi-blue-fg">,</span> join_axes<span class="ansi-blue-fg">=</span>pd<span class="ansi-blue-fg">.</span>Index<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>names<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    393</span>     variable_stats<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">.</span>names <span class="ansi-blue-fg">=</span> df<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">.</span>names
+<span class="ansi-green-intense-fg ansi-bold">    394</span> 
+
+<span class="ansi-green-fg">/usr/local/lib/python3.7/dist-packages/pandas/util/_decorators.py</span> in <span class="ansi-cyan-fg">wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    309</span>                     stacklevel<span class="ansi-blue-fg">=</span>stacklevel<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    310</span>                 )
+<span class="ansi-green-fg">--&gt; 311</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> func<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    312</span> 
+<span class="ansi-green-intense-fg ansi-bold">    313</span>         <span class="ansi-green-fg">return</span> wrapper
+
+<span class="ansi-red-fg">TypeError</span>: concat() got an unexpected keyword argument &#39;join_axes&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">users_log_raw</span> <span class="c1"># 보안상 출력 삭제</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">freeze</span> <span class="o">|</span><span class="n">grep</span> <span class="n">pandas</span><span class="o">-</span><span class="n">profiling</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>pandas-profiling==1.4.1
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;files.log&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># with open(&#39;files.log&#39;, &#39;r&#39;, encoding=&#39;utf-16&#39;) as f: UTF-16 stream does not start with BOM</span>
+<span class="c1"># with open(&#39;files.log&#39;, &#39;r&#39;, encoding=enc) as f: &#39;charmap&#39; codec can&#39;t decode byte 0x90 in position 5926451: character maps to &lt;undefined&gt;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;files.log&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">enc</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> 
+    <span class="c1"># lines = f.readline()</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">UnicodeDecodeError</span>                        Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-44-1a4b33beda3e&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-green-fg">with</span> open<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;ex210817.log&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;r&#39;</span><span class="ansi-blue-fg">,</span> encoding<span class="ansi-blue-fg">=</span>enc<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">as</span> f<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     <span class="ansi-red-fg"># lines = f.readline()</span>
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg">     </span>lines <span class="ansi-blue-fg">=</span> f<span class="ansi-blue-fg">.</span>read<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>splitlines<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span>     f<span class="ansi-blue-fg">.</span>close<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/usr/lib/python3.7/encodings/cp1254.py</span> in <span class="ansi-cyan-fg">decode</span><span class="ansi-blue-fg">(self, input, final)</span>
+<span class="ansi-green-intense-fg ansi-bold">     21</span> <span class="ansi-green-fg">class</span> IncrementalDecoder<span class="ansi-blue-fg">(</span>codecs<span class="ansi-blue-fg">.</span>IncrementalDecoder<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     22</span>     <span class="ansi-green-fg">def</span> decode<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> final<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 23</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> codecs<span class="ansi-blue-fg">.</span>charmap_decode<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">,</span>self<span class="ansi-blue-fg">.</span>errors<span class="ansi-blue-fg">,</span>decoding_table<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">     24</span> 
+<span class="ansi-green-intense-fg ansi-bold">     25</span> <span class="ansi-green-fg">class</span> StreamWriter<span class="ansi-blue-fg">(</span>Codec<span class="ansi-blue-fg">,</span>codecs<span class="ansi-blue-fg">.</span>StreamWriter<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">UnicodeDecodeError</span>: &#39;charmap&#39; codec can&#39;t decode byte 0x90 in position 5926451: character maps to &lt;undefined&gt;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+<span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1">#pandas profiling 업데이트하고 런타임 재시작하니 갑자기 &#39;utf-8&#39; codec can&#39;t decode byte 0xbc in position 52441641: invalid start byte</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">UnicodeDecodeError</span>                        Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-7-f70f446e44ad&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>lines <span class="ansi-blue-fg">=</span> file<span class="ansi-blue-fg">.</span>read<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>splitlines<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> file<span class="ansi-blue-fg">.</span>close<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-red-fg">#pandas profiling 업데이트하고 런타임 재시작하니 갑자기 &#39;utf-8&#39; codec can&#39;t decode byte 0xbc in position 52441641: invalid start byte</span>
+
+<span class="ansi-green-fg">/usr/lib/python3.7/codecs.py</span> in <span class="ansi-cyan-fg">decode</span><span class="ansi-blue-fg">(self, input, final)</span>
+<span class="ansi-green-intense-fg ansi-bold">    320</span>         <span class="ansi-red-fg"># decode input (taking the buffer into account)</span>
+<span class="ansi-green-intense-fg ansi-bold">    321</span>         data <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>buffer <span class="ansi-blue-fg">+</span> input
+<span class="ansi-green-fg">--&gt; 322</span><span class="ansi-red-fg">         </span><span class="ansi-blue-fg">(</span>result<span class="ansi-blue-fg">,</span> consumed<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_buffer_decode<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>errors<span class="ansi-blue-fg">,</span> final<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    323</span>         <span class="ansi-red-fg"># keep undecoded input until the next call</span>
+<span class="ansi-green-intense-fg ansi-bold">    324</span>         self<span class="ansi-blue-fg">.</span>buffer <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span>consumed<span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span>
+
+<span class="ansi-red-fg">UnicodeDecodeError</span>: &#39;utf-8&#39; codec can&#39;t decode byte 0xbc in position 52441641: invalid start byte</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;#Fields: date time cs-method cs-uri-stem cs-uri-query cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">users_log_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">log_date_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">:]],</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">UnicodeDecodeError</span>                        Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-25-e98b3610b861&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>log210817 <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>DataFrame<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>line<span class="ansi-blue-fg">.</span>decode<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39; &#39;</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> line <span class="ansi-green-fg">in</span> lines<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> columns <span class="ansi-blue-fg">=</span> lines<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>decode<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39; &#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-25-e98b3610b861&gt;</span> in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>log210817 <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>DataFrame<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>line<span class="ansi-blue-fg">.</span>decode<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39; &#39;</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> line <span class="ansi-green-fg">in</span> lines<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> columns <span class="ansi-blue-fg">=</span> lines<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>decode<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39; &#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">UnicodeDecodeError</span>: &#39;utf-8&#39; codec can&#39;t decode byte 0xbc in position 31: invalid start byte</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">lines</span><span class="p">[</span><span class="mi">148636</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">UnicodeDecodeError</span>                        Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-28-d784f97e443f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>lines<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">148636</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>decode<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39; &#39;</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">UnicodeDecodeError</span>: &#39;utf-8&#39; codec can&#39;t decode byte 0xbc in position 31: invalid start byte</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">:]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="c1"># 어느 행에서 오류 발생하는지 확인</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">lines</span><span class="p">[</span><span class="mi">148636</span><span class="p">]</span> <span class="c1"># 내용: 한국어 포함 jpg 파일</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">IndexError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-37-ec5c5841f2f9&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>lines<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">148636</span><span class="ansi-blue-fg">]</span> <span class="ansi-red-fg"># 내용: /Media/서울대_우연철_287_164(1).jpg</span>
+
+<span class="ansi-red-fg">IndexError</span>: string index out of range</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">chardet</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">rawdata</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;files.log&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">chardet</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">rawdata</span><span class="p">)</span>
+<span class="n">enc</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">enc</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Windows-1254&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"acdd28f376aa431b88402c466ef4876a": {"model_module": "@jupyter-widgets/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_8c27432e811c4bfc9985d8513fb570a2", "IPY_MODEL_6977f34d63e34fcd8dbc39f9b0d0c463", "IPY_MODEL_b9a4d2a5e9a849a0b3ae5adf96b14ee5"], "layout": "IPY_MODEL_53d526056e7c44e1803df3e22def70f4"}}, "8c27432e811c4bfc9985d8513fb570a2": {"model_module": "@jupyter-widgets/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_b167b1325f0f43ea8f5afa41d24d0ce9", "placeholder": "\u200b", "style": "IPY_MODEL_c7e386e6859e49dd95cec2ae5282bba9", "value": "  4%"}}, "6977f34d63e34fcd8dbc39f9b0d0c463": {"model_module": "@jupyter-widgets/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "danger", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_c4bbb1f060b64516ac143a96d75560fd", "max": 101352, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_5dff0b0f14bc4187a2ce3393c66cca05", "value": 4548}}, "b9a4d2a5e9a849a0b3ae5adf96b14ee5": {"model_module": "@jupyter-widgets/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_0e71a5bd7be84a9f950d43c96eac6d18", "placeholder": "\u200b", "style": "IPY_MODEL_f0e934753c4c4739b85ca4f7cb5d2108", "value": " 4548/101352 [04:11&lt;2:56:36,  9.14it/s]"}}, "53d526056e7c44e1803df3e22def70f4": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b167b1325f0f43ea8f5afa41d24d0ce9": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c7e386e6859e49dd95cec2ae5282bba9": {"model_module": "@jupyter-widgets/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "c4bbb1f060b64516ac143a96d75560fd": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5dff0b0f14bc4187a2ce3393c66cca05": {"model_module": "@jupyter-widgets/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "0e71a5bd7be84a9f950d43c96eac6d18": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f0e934753c4c4739b85ca4f7cb5d2108": {"model_module": "@jupyter-widgets/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}}
+</script>
+
+
+
+  </div><a class="u-url" href="/DAblog/2022/05/15/read-log-file.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/DAblog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/DAblog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/DAblog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" target="_blank" title="fastai"><svg class="svg-icon grey"><use xlink:href="/DAblog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" target="_blank" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/DAblog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
